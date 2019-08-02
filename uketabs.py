@@ -114,6 +114,7 @@ def main():
                 with open(filename, "rb") as f:
                     measures = pickle.load(f)
                 display(measures, measures_per_line)
+                auto_save = filename
             except:
                 usage()
         elif command.startswith("save"):
