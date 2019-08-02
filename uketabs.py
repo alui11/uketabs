@@ -121,7 +121,7 @@ def main():
                 auto_save = filename
             except:
                 usage()
-        elif command == "export":
+        elif command.startswith("export"):
             try:
                 command = command.split()
                 if len(command) > 1:
@@ -152,6 +152,14 @@ def main():
             try:
                 measure_num = int(command[2])-1
                 measures.pop(measure_num)
+                display(measures, measures_per_line)
+            except:
+                usage()
+        elif command.startswith("copy measure"):
+            command = command.split()
+            try:
+                measure_num = int(command[2])-1
+                measures.append(measures[measure_num])
                 display(measures, measures_per_line)
             except:
                 usage()
@@ -211,3 +219,5 @@ main()
 # usage
 # arrow keys
 # ask to save before quitting / loading
+# advanced copy and paste
+# multi-digit frets
