@@ -100,6 +100,14 @@ def main():
             print(measures)
         elif command == "show":
             display(measures, measures_per_line)
+        elif command.startswith("mpl"):
+            command = command.split()
+            try:
+                mpl = int(command[1])
+                measures_per_line = mpl
+                display(measures, measures_per_line)
+            except:
+                usage()
         elif command.startswith("load"):
             try:
                 filename = command.split()[1]
