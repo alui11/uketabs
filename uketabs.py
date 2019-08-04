@@ -16,7 +16,62 @@ def smart_open(filename=None):
             fh.close()
 
 def usage():
-    print("Documentation coming soon.")
+    print('''
+    uketabs
+    A simple command line ukulele tab editor
+
+    help
+        show this help message
+    exit / quit / q
+        exit program
+    load [filename]
+        load tab file that has been saved with this editor
+    save [filename]
+        save tab as pickle file that can be reloaded with this editor
+        if filename unspecified, overwrites last loaded or saved file
+    export [filename]
+        save tab as plain text file
+        if filename unspecified, overwrites last exported file
+    show
+        display current tab
+    mpl [measures per line]
+        adjust measures displayed per line (default = 4)
+    bar
+        append a new measure
+    [column]
+        append a new column to the last measure
+        specify columns with four space-separated tokens, in top-down order
+            for example:
+            2 3 2 0
+            - - - 4
+            7- 8- 9- 10
+        unspecified tokens are interpreted as '-'
+            for example:
+            - 3 becomes - 3 - -
+            4 becomes 4 - - -
+            a blank line becomes - - - -
+        columns can also be specified with chord names
+        all major, minor, and 7 chords supported (flats only)
+            examples:
+            F becomes 0 1 0 2
+            Am becomes 0 0 0 2
+            G7 becomes 1 2 1 0
+            Bb becomes 1 1 2 3
+    del
+        delete the last column of the last measure
+    del measure [measure #]
+        delete the given measure
+    insert measure [measure #]
+        insert a blank measure at a given location
+    copy measure [measure #]
+        copy the given measure and append the copy to the end of the tab
+    insert [measure #] [column #] [column]
+        insert a column in the given measure at the given column number
+    edit [measure #] [column #] [column]
+        replace the specified column with a new one
+    del [measure #] [column #]
+        delete the specified column
+    ''')
 
 chords = {'A': ['0', '0', '1', '2'],
         'Am': ['0', '0', '0', '2'],
