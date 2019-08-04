@@ -33,6 +33,8 @@ def usage():
     export [filename]
         save tab as plain text file
         if filename unspecified, overwrites last exported file
+    new
+        create blank document
     show
         display current tab
     mpl [measures per line]
@@ -207,6 +209,9 @@ def main():
                 auto_export = filename
             except:
                 usage()
+        elif command == "new":
+            measures = [[['-', '-', '-', '-']]]
+            display(measures, measures_per_line)
         elif command == "bar":
             measures.append([['-', '-', '-', '-']])
             display(measures, measures_per_line)
