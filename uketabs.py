@@ -1,6 +1,7 @@
+import contextlib
+import copy
 import pickle
 import sys
-import contextlib
 
 @contextlib.contextmanager
 def smart_open(filename=None):
@@ -64,7 +65,13 @@ def usage():
     insert measure [measure #]
         insert a blank measure at a given location
     copy measure [measure #]
-        copy the given measure and append the copy to the end of the tab
+        copy the given measure to the clipboard
+    copy range [begin] [end]
+        copy the range of measures to the clipboard
+    paste
+        append the clipboard to the end of the tab
+    paste insert
+        insert the clipboard at the specified measure number
     insert [measure #] [column #] [column]
         insert a column in the given measure at the given column number
     edit [measure #] [column #] [column]
@@ -143,6 +150,9 @@ def main():
     #each measure is a list of columns
     #each column is a list of 4 characters
     measures = [[['-', '-', '-', '-']]]
+
+    # clipboard for copy/paste
+    clipboard = []
 
     display(measures, measures_per_line)
     while True:
@@ -223,8 +233,37 @@ def main():
             command = command.split()
             try:
                 measure_num = int(command[2])-1
-                measures.append(measures[measure_num])
-                display(measures, measures_per_line)
+                clipboard = [copy.deepcopy(measures[measure_num])]
+                print("Copied measure {}. Use 'paste' or 'paste insert'.".format(measure_num+1))
+            except:
+                usage()
+        elif command.startswith("copy range"):
+            command = command.split()
+            try:
+                begin_range = int(command[2])-1
+                end_range = int(command[3])
+                clipboard = copy.deepcopy(measures[begin_range:end_range])
+                print("Copied measures {}-{}. Use 'paste' or 'paste insert'.".format(begin_range+1, end_range))
+            except:
+                usage()
+        elif command.startswith("paste insert"):
+            command = command.split()
+            try:
+                if len(clipboard) > 0:
+                    measure_num = int(command[2])-1
+                    measures[measure_num:measure_num] = copy.deepcopy(clipboard)
+                    display(measures, measures_per_line)
+                else:
+                    print("Clipboard empty")
+            except:
+                usage()
+        elif command == "paste":
+            try:
+                if len(clipboard) > 0:
+                    measures.extend(copy.deepcopy(clipboard))
+                    display(measures, measures_per_line)
+                else:
+                    print("Clipboard empty")
             except:
                 usage()
         elif command.startswith("edit"):
@@ -280,8 +319,6 @@ def main():
 main()
 
 # todo
-# usage
 # arrow keys
 # ask to save before quitting / loading
-# advanced copy and paste
-# multi-digit frets
+# new document
