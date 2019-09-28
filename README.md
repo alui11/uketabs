@@ -33,22 +33,22 @@ This editor is intended to be a quick way to write down a ukulele solo. This sty
     append a new column to the last measure\
     specify columns with four space-separated tokens, in top-down order\
         for example:\
-        2 3 2 0\
-        - - - 4\
-        7- 8- 9- 10\
+        `2 3 2 0`\
+        `- - - 4`\
+        `7- 8- 9- 10`\
     unspecified tokens are interpreted as '-'\
         for example:\
-        - 3 becomes - 3 - -\
-        4 becomes 4 - - -\
-        a blank line becomes - - - -\
+        `- 3` becomes `- 3 - -`\
+        `4` becomes `4 - - -`\
+        a blank line becomes `- - - -`\
     columns can also be specified with chord names\
     the most common fingering will be applied\
     all major, minor, and 7 chords supported\
         examples:\
-        F becomes 0 1 0 2\
-        Am becomes 0 0 0 2\
-        G7 becomes 1 2 1 0\
-        Bb becomes 1 1 2 3\
+        `F` becomes `0 1 0 2`\
+        `Am` becomes `0 0 0 2`\
+        `G7` becomes `1 2 1 0`\
+        `Bb` becomes `1 1 2 3`\
 `del`\
     delete the last column of the last measure\
 `del measure [measure #]`\
