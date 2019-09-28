@@ -33,6 +33,8 @@ This editor is intended to be a quick way to write down a ukulele solo. This sty
     a non-blank column is added\
 `bar` / `b`\
     append a new measure\
+`barline [measure #] [column #]`\
+    insert a barline at the specified measure and column\
 `[column]`\
     append a new column to the last measure\
     specify columns with four space-separated tokens, in top-down order\
@@ -53,7 +55,7 @@ This editor is intended to be a quick way to write down a ukulele solo. This sty
         `Am` becomes `0 0 0 2`\
         `G7` becomes `1 2 1 0`\
         `Bb` becomes `1 1 2 3`\
-`del`\
+`del` / `d`\
     delete the last column of the last measure\
 `del measure [measure #]`\
     delete the given measure\

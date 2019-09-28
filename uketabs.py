@@ -39,8 +39,14 @@ def usage():
         display current tab
     mpl [measures per line]
         adjust measures displayed per line (default = 4)
+    autospace
+        toggle autospace mode (default = ON)
+        autospace mode: a blank column is automatically appended whenever
+        a non-blank column is added
     bar / b
         append a new measure
+    barline [measure #] [column #]
+        insert a barline at the specified measure and column
     [column]
         append a new column to the last measure
         specify columns with four space-separated tokens, in top-down order
@@ -61,7 +67,7 @@ def usage():
             Am becomes 0 0 0 2
             G7 becomes 1 2 1 0
             Bb becomes 1 1 2 3
-    del
+    del / d
         delete the last column of the last measure
     del measure [measure #]
         delete the given measure
@@ -175,6 +181,7 @@ def main():
     measures_per_line = 4
     auto_save = "my_song.tab"
     auto_export = "my_song.txt"
+    autospace = True
 
     #list of measures
     #each measure is a list of columns
@@ -203,6 +210,9 @@ def main():
                 display(measures, measures_per_line)
             except:
                 usage()
+        elif command == "autospace":
+            autospace = not autospace
+            print("autospace mode turned {}".format("ON" if autospace else "OFF"))
         elif command.startswith("load"):
             try:
                 filename = command.split()[1]
@@ -243,7 +253,18 @@ def main():
         elif command in ["bar", "b"]:
             measures.append([['-', '-', '-', '-']])
             display(measures, measures_per_line)
-        elif command =="del":
+        elif command.startswith("barline"):
+            command = command.split()
+            try:
+                measure_num = int(command[1])-1
+                col_num = int(command[2])-1
+                measures.insert(measure_num+1, measures[measure_num][col_num:])
+                measures.insert(measure_num+1, measures[measure_num][:col_num])
+                measures.pop(measure_num)
+                display(measures, measures_per_line)
+            except:
+                usage()
+        elif command in ["del", "d"]:
             measures[-1].pop()
             display(measures, measures_per_line)
         elif command.startswith("insert measure"):
@@ -304,7 +325,10 @@ def main():
             try:
                 measure_num = int(command[1])-1
                 col_num = int(command[2])-1
-                col = command[3:]
+                if len(command) < 4:
+                    col = ['-', '-', '-', '-']
+                else:
+                    col = command[3:]
                 if col[0] in chords:
                     col = chords[col[0]]
                 while len(col) < 4:
@@ -319,7 +343,10 @@ def main():
             try:
                 measure_num = int(command[1])-1
                 col_num = int(command[2])-1
-                col = command[3:]
+                if len(command) < 4:
+                    col = ['-', '-', '-', '-']
+                else:
+                    col = command[3:]
                 if col[0] in chords:
                     col = chords[col[0]]
                 while len(col) < 4:
@@ -347,6 +374,8 @@ def main():
             while len(col) < 4:
                 col.append('-')
             measures[-1].append(col)
+            if autospace and col != ['-', '-', '-', '-']:
+                measures[-1].append(['-', '-', '-', '-'])
             display(measures, measures_per_line)
 
 main()
