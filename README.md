@@ -27,7 +27,7 @@ This editor is intended to be a quick way to write down a ukulele solo. This sty
     display current tab\
 `mpl [measures per line]`\
     adjust measures displayed per line (default = 4)\
-`autospace`
+`autospace`\
     toggle autospace mode (default = ON)\
     autospace mode: a blank column is automatically appended whenever
     a non-blank column is added\
