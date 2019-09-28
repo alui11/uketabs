@@ -39,7 +39,7 @@ def usage():
         display current tab
     mpl [measures per line]
         adjust measures displayed per line (default = 4)
-    bar
+    bar / b
         append a new measure
     [column]
         append a new column to the last measure
@@ -54,7 +54,8 @@ def usage():
             4 becomes 4 - - -
             a blank line becomes - - - -
         columns can also be specified with chord names
-        all major, minor, and 7 chords supported (flats only)
+        the most common fingering will be applied
+        all major, minor, and 7 chords supported
             examples:
             F becomes 0 1 0 2
             Am becomes 0 0 0 2
@@ -72,7 +73,7 @@ def usage():
         copy the range of measures to the clipboard
     paste
         append the clipboard to the end of the tab
-    paste insert
+    paste insert [measure #]
         insert the clipboard at the specified measure number
     insert [measure #] [column #] [column]
         insert a column in the given measure at the given column number
@@ -85,36 +86,63 @@ def usage():
 chords = {'A': ['0', '0', '1', '2'],
         'Am': ['0', '0', '0', '2'],
         'A7': ['0', '0', '1', '0'],
+        'A#': ['1', '1', '2', '3'],
+        'A#m': ['1', '1', '1', '3'],
+        'A#7': ['1', '1', '2', '1'],
         'Bb': ['1', '1', '2', '3'],
         'Bbm': ['1', '1', '1', '3'],
         'Bb7': ['1', '1', '2', '1'],
         'B': ['2', '2', '3', '4'],
         'Bm': ['2', '2', '2', '4'],
         'B7': ['2', '2', '3', '2'],
+        'B#': ['3', '0', '0', '0'],
+        'B#m': ['3', '3', '3', '0'],
+        'B#7': ['1', '0', '0', '0'],
+        'Cb': ['2', '2', '3', '4'],
+        'Cbm': ['2', '2', '2', '4'],
+        'Cb7': ['2', '2', '3', '2'],
         'C': ['3', '0', '0', '0'],
         'Cm': ['3', '3', '3', '0'],
         'C7': ['1', '0', '0', '0'],
+        'C#': ['4', '1', '1', '1'],
+        'C#m': ['4', '4', '4', '1'],
+        'C#7': ['2', '1', '1', '1'],
         'Db': ['4', '1', '1', '1'],
         'Dbm': ['4', '4', '4', '1'],
         'Db7': ['2', '1', '1', '1'],
         'D': ['0', '2', '2', '2'],
         'Dm': ['0', '1', '2', '2'],
         'D7': ['3', '2', '2', '2'],
+        'D#': ['1', '3', '3', '0'],
+        'D#m': ['1', '2', '3', '3'],
+        'D#7': ['4', '3', '3', '3'],
         'Eb': ['1', '3', '3', '0'],
         'Ebm': ['1', '2', '3', '3'],
         'Eb7': ['4', '3', '3', '3'],
         'E': ['2', '4', '4', '4'],
         'Em': ['2', '3', '4', '0'],
         'E7': ['2', '0', '2', '1'],
+        'E#': ['0', '1', '0', '2'],
+        'E#m': ['3', '1', '0', '1'],
+        'E#7': ['3', '1', '3', '2'],
+        'Fb': ['2', '4', '4', '4'],
+        'Fbm': ['2', '3', '4', '0'],
+        'Fb7': ['2', '0', '2', '1'],
         'F': ['0', '1', '0', '2'],
         'Fm': ['3', '1', '0', '1'],
         'F7': ['3', '1', '3', '2'],
+        'F#': ['1', '2', '1', '3'],
+        'F#m': ['0', '2', '1', '2'],
+        'F#7': ['4', '2', '4', '3'],
         'Gb': ['1', '2', '1', '3'],
         'Gbm': ['0', '2', '1', '2'],
         'Gb7': ['4', '2', '4', '3'],
         'G': ['2', '3', '2', '0'],
         'Gm': ['1', '3', '2', '0'],
         'G7': ['2', '1', '2', '0'],
+        'G#': ['3', '4', '3', '5'],
+        'G#m': ['2', '4', '3', '4'],
+        'G#7': ['3', '2', '3', '1'],
         'Ab': ['3', '4', '3', '5'],
         'Abm': ['2', '4', '3', '4'],
         'Ab7': ['3', '2', '3', '1'],
@@ -150,7 +178,7 @@ def main():
 
     #list of measures
     #each measure is a list of columns
-    #each column is a list of 4 characters
+    #each column is a list of 4 tokens
     measures = [[['-', '-', '-', '-']]]
 
     # clipboard for copy/paste
@@ -212,7 +240,7 @@ def main():
         elif command == "new":
             measures = [[['-', '-', '-', '-']]]
             display(measures, measures_per_line)
-        elif command == "bar":
+        elif command in ["bar", "b"]:
             measures.append([['-', '-', '-', '-']])
             display(measures, measures_per_line)
         elif command =="del":
@@ -322,8 +350,3 @@ def main():
             display(measures, measures_per_line)
 
 main()
-
-# todo
-# arrow keys
-# ask to save before quitting / loading
-# new document
