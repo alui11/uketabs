@@ -9,27 +9,27 @@ This editor is intended to be a quick way to write down a ukulele solo. This sty
 
 ## Commands
 
-`help`
+-`help`
     show this help message
-`exit` / `quit` / `q`
+-`exit` / `quit` / `q`
     exit program
-`load [filename]`
+-`load [filename]`
     load tab file that has been saved with this editor
-`save [filename]`
+-`save [filename]`
     save tab as pickle file that can be reloaded with this editor
     if filename unspecified, overwrites last loaded or saved file
-`export [filename]`
+-`export [filename]`
     save tab as plain text file
     if filename unspecified, overwrites last exported file
-`new`
+-`new`
     create blank document
-`show`
+-`show`
     display current tab
-`mpl [measures per line]`
+-`mpl [measures per line]`
     adjust measures displayed per line (default = 4)
-`bar` / `b`
+-`bar` / `b`
     append a new measure
-`[column]`
+-`[column]`
     append a new column to the last measure
     specify columns with four space-separated tokens, in top-down order
         for example:
@@ -49,23 +49,23 @@ This editor is intended to be a quick way to write down a ukulele solo. This sty
         Am becomes 0 0 0 2
         G7 becomes 1 2 1 0
         Bb becomes 1 1 2 3
-`del`
+-`del`
     delete the last column of the last measure
-`del measure [measure #]`
+-`del measure [measure #]`
     delete the given measure
-`insert measure [measure #]`
+-`insert measure [measure #]`
     insert a blank measure at a given location
-`copy measure [measure #]`
+-`copy measure [measure #]`
     copy the given measure to the clipboard
-`copy range [begin] [end]`
+-`copy range [begin] [end]`
     copy the range of measures to the clipboard
-`paste`
+-`paste`
     append the clipboard to the end of the tab
-`paste insert [measure #]`
+-`paste insert [measure #]`
     insert the clipboard at the specified measure number
-`insert [measure #] [column #] [column]`
+-`insert [measure #] [column #] [column]`
     insert a column in the given measure at the given column number
-`edit [measure #] [column #] [column]`
+-`edit [measure #] [column #] [column]`
     replace the specified column with a new one
-`del [measure #] [column #]`
+-`del [measure #] [column #]`
     delete the specified column
