@@ -57,6 +57,7 @@ This editor is intended to be a quick way to write down a ukulele solo. This sty
         `Bb` becomes `1 1 2 3`\
 `del` / `d`\
     delete the last column of the last measure\
+    when in autospace mode, deletes last two columns\
 `del measure [measure #]`\
     delete the given measure\
 `insert measure [measure #]`\

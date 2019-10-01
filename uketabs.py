@@ -69,6 +69,7 @@ def usage():
             Bb becomes 1 1 2 3
     del / d
         delete the last column of the last measure
+        when in autospace mode, deletes last 2 columns
     del measure [measure #]
         delete the given measure
     insert measure [measure #]
@@ -266,6 +267,8 @@ def main():
                 usage()
         elif command in ["del", "d"]:
             measures[-1].pop()
+            if autospace:
+                measures[-1].pop()
             display(measures, measures_per_line)
         elif command.startswith("insert measure"):
             command = command.split()
