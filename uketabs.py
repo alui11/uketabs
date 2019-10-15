@@ -266,10 +266,13 @@ def main():
             except:
                 usage()
         elif command in ["del", "d"]:
-            measures[-1].pop()
-            if autospace:
+            try:
                 measures[-1].pop()
-            display(measures, measures_per_line)
+                if autospace:
+                    measures[-1].pop()
+                display(measures, measures_per_line)
+            except:
+                usage()
         elif command.startswith("insert measure"):
             command = command.split()
             try:
@@ -278,7 +281,7 @@ def main():
                 display(measures, measures_per_line)
             except:
                 usage()
-        elif command.startswith("del measure"):
+        elif command.startswith("del measure") or command.startswith("delete measure"):
             command = command.split()
             try:
                 measure_num = int(command[2])-1
@@ -358,7 +361,7 @@ def main():
                 display(measures, measures_per_line)
             except:
                 usage()
-        elif command.startswith("del"):
+        elif command.startswith("del") or command.startswith("delete"):
             command = command.split()
             try:
                 measure_num = int(command[1])-1
