@@ -267,7 +267,7 @@ def main():
                 usage()
         elif command in ["del", "d"]:
             try:
-                if len(measures[-1]) == 1:
+                if len(measures[-1]) <= 1:
                     measures.pop()
                 else:
                     measures[-1].pop()
