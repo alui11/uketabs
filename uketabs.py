@@ -339,7 +339,7 @@ def main():
                 else:
                     col = command[3:]
                 if col[0] in chords:
-                    col = chords[col[0]]
+                    col = copy.deepcopy(chords[col[0]])
                 while len(col) < 4:
                     col.append('-')
                 for i in range(4):
@@ -357,7 +357,7 @@ def main():
                 else:
                     col = command[3:]
                 if col[0] in chords:
-                    col = chords[col[0]]
+                    col = copy.deepcopy(chords[col[0]])
                 while len(col) < 4:
                     col.append('-')
                 measures[measure_num].insert(col_num, col)
@@ -377,7 +377,7 @@ def main():
             if command == "space":
                 col = ['-', '-', '-', '-']
             elif command in chords:
-                col = chords[command]
+                col = copy.deepcopy(chords[command])
             else:
                 col = command.split()
             while len(col) < 4:
