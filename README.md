@@ -35,6 +35,8 @@ This editor is intended to be a quick way to write down a ukulele solo. This sty
     append a new measure\
 `barline [measure #] [column #]`\
     insert a barline at the specified measure and column\
+`del barline [measure #]`\
+    delete the barline before the specified measure\
 `[column]`\
     append a new column to the last measure\
     specify columns with four space-separated tokens, in top-down order\

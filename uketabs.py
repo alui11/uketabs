@@ -47,6 +47,8 @@ def usage():
         append a new measure
     barline [measure #] [column #]
         insert a barline at the specified measure and column
+    del barline [measure #]
+        delete the barline before the specified measure
     [column]
         append a new column to the last measure
         specify columns with four space-separated tokens, in top-down order
@@ -263,6 +265,19 @@ def main():
                 measures.insert(measure_num+1, measures[measure_num][:col_num])
                 measures.pop(measure_num)
                 display(measures, measures_per_line)
+            except:
+                usage()
+        elif command.startswith("del barline"):
+            command = command.split()
+            try:
+                measure_num = int(command[2])-1
+                if measure_num > 1 and measure_num < len(measures):
+                    measures[measure_num].pop(0)
+                    measures[measure_num-1] += measures[measure_num]
+                    measures.pop(measure_num)
+                    display(measures, measures_per_line)
+                else:
+                    print("Error: Measure number out of range")
             except:
                 usage()
         elif command in ["del", "d"]:
