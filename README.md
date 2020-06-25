@@ -78,3 +78,8 @@ This editor is intended to be a quick way to write down a ukulele solo. This sty
     replace the specified column with a new one\
 `del [measure #] [column #]`\
     delete the specified column
+
+## Todo
+-Undo
+-Load file with command line argument
+-Read ascii file into tab format
