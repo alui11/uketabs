@@ -18,26 +18,26 @@ exit program
 ##### `load [filename]`
 load tab file that has been saved with this editor
 
-#####`save [filename]`
+##### `save [filename]`
 save tab as pickle file that can be reloaded with this editor
 
 if filename unspecified, overwrites last loaded or saved file
 
-#####`export [filename]`
+##### `export [filename]`
 save tab as plain text file
 
 if filename unspecified, overwrites last exported file
 
-#####`new`
+##### `new`
 create blank document
 
-#####`show`
+##### `show`
 display current tab 
 
-#####`mpl [measures per line]`
+##### `mpl [measures per line]`
 adjust measures displayed per line (default = 4)
 
-#####`autospace`
+##### `autospace`
 toggle autospace mode (default = ON) 
 
 autospace mode: a blank column is automatically appended whenever a non-blank column is added
