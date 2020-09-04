@@ -1,6 +1,6 @@
 import copy
-from measure import Measure
-import measure_utils
+from modules.measure import Measure
+from modules import measure_utils
 import pickle
 import sys
 
