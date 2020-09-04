@@ -16,14 +16,9 @@ show this help message
 exit program
 
 ##### `load [filename]`
-load tab file that has been saved with this editor
+load ascii tab file that has been created with this editor
 
 ##### `save [filename]`
-save tab as pickle file that can be reloaded with this editor
-
-if filename unspecified, overwrites last loaded or saved file
-
-##### `export [filename]`
 save tab as plain text file
 
 if filename unspecified, overwrites last exported file
@@ -181,7 +176,6 @@ delete the specified column
 ## Todo
 - Undo command (Edit history)
 - Load file with command line argument
-- Load from ascii tab
 - Column entry shortcut without spaces
 - Cursor
   - Move to specific spot, beginning, end, left, right, up, down

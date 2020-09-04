@@ -1,7 +1,6 @@
 import copy
 from modules.measure import Measure
 from modules import measure_utils
-import pickle
 import sys
 
 def usage():
@@ -14,13 +13,10 @@ def usage():
     exit / quit / q
         exit program
     load [filename]
-        load tab file that has been saved with this editor
+        load ascii tab file that has been created with this editor
     save [filename]
-        save tab as pickle file that can be reloaded with this editor
-        if filename unspecified, overwrites last loaded or saved file
-    export [filename]
         save tab as plain text file
-        if filename unspecified, overwrites last exported file
+        if filename unspecified, overwrites last saved file
     new
         create blank document
     show
@@ -83,8 +79,7 @@ def usage():
 def main():
     # Settings
     mpl = 4  # Measures per line
-    auto_save = "my_song.tab"
-    auto_export = "my_song.txt"
+    auto_save = "my_song.txt"
     autospace = True
 
     # Initialize list of measures
@@ -121,8 +116,7 @@ def main():
                 if len(command) < 2:
                     raise ValueError("load requires filename argument.")
                 filename = command[1]
-                with open(filename, "rb") as f:
-                    measures = pickle.load(f)
+                measures = measure_utils.load_tab_from_ascii(filename)
                 measure_utils.write_measures(measures, mpl)
                 auto_save = filename
             except Exception as e:
@@ -134,24 +128,11 @@ def main():
             else:
                 filename = auto_save
             try:
-                with open(filename, "wb") as f:
-                    pickle.dump(measures, f)
+                measure_utils.write_measures(measures, mpl, filename)
                 print("Successfully saved to {}".format(filename))
                 auto_save = filename
             except Exception as e:
                 print("Error saving file: {}".format(e.message))
-        elif command.startswith("export"):
-            command = command.split()
-            if len(command) > 1:
-                filename = command[1]
-            else:
-                filename = auto_export
-            try:
-                measure_utils.write_measures(measures, mpl, filename)
-                print("Successfully exported to {}".format(filename))
-                auto_export = filename
-            except Exception as e:
-                print("Error exporting file: {}".format(e.message))
         elif command == "new":
             measures = [Measure()]
             measure_utils.write_measures(measures, mpl)

@@ -71,3 +71,34 @@ def write_measures(measures, measures_per_line, filename=None):
                     fh.write('|')
                 fh.write('\n')
             fh.write('\n')
+
+def load_tab_from_ascii_lines(lines):
+    '''Loads tab from a list of ascii lines into a list of Measure
+    objects. Lines beginning with '|' must be part of measures, and
+    all other lines are ignored.'''
+    measures = []
+    i = 0
+    while i < len(lines):
+        if lines[i].startswith('|'):
+            tab_line = []
+            for _ in range(4):
+                tab_line.append(filter(None, lines[i].strip().split('|')))
+                i += 1
+            for m in range(len(tab_line[0])):
+                measure = Measure()
+                measure.delete()
+                for c in range(len(tab_line[0][m])):
+                    measure.append(' '.join([tab_line[l][m][c] for l in range(4)]))
+                measures.append(measure)
+        else:
+            i += 1
+    return measures
+            
+
+def load_tab_from_ascii(filename):
+    '''Loads ascii tab from file into a list of Measure objects. Lines
+    beginning with '|' in the file must be part of measures, and all
+    other lines are ignored.'''
+    with open(filename) as f:
+        lines = f.readlines()
+    return load_tab_from_ascii_lines(lines)
