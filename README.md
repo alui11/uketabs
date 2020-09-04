@@ -1,7 +1,7 @@
 # uketabs
-A very simple, quick, free command line ukulele tab editor
+A very simple and quick command line ukulele ascii tab editor
 
-This editor is intended to be a quick way to write down a ukulele solo. This style of tab does not represent rhythms or decorations. For sharing, teaching, or remembering music over long periods of time, these tabs should be paired with videos. 
+This editor is intended to be a quick way to write down a ukulele solo. This style of tab does not represent rhythms, decorations, or strumming. For sharing, teaching, or remembering music over long periods of time, these tabs should be paired with videos. 
 
 ## Run
 
@@ -179,6 +179,16 @@ replace the specified column with a new one
 delete the specified column
 
 ## Todo
-- Undo command
+- Undo command (Edit history)
 - Load file with command line argument
 - Load from ascii tab
+- Column entry shortcut without spaces
+- Cursor
+  - Move to specific spot, beginning, end, left, right, up, down
+- More bar numbers when mpl is large
+- Highlight last change
+  - Different colors for change/insertion/deletion
+- Display columns per line instead of measure per line
+- Repeats
+- Stop the user from leaving without saving
+- Look up specific command
