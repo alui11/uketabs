@@ -1,8 +1,12 @@
 '''
 measure_utils.py
 '''
+from colorama import init
+init()
+from colorama import Fore, Back, Style
 import contextlib
 from measure import Measure
+from measure import EditDescriptor
 import sys
 
 @contextlib.contextmanager
@@ -45,7 +49,7 @@ def merge_measures(measure1, measure2):
     of second measure.'''
     return Measure(measure1.columns + measure2.columns[1:])
 
-def write_measures(measures, measures_per_line, filename=None):
+def write_measures(measures, measures_per_line, filename=None, last_edit=None):
     '''Prints list of measures in a human-readable format.
 
     Adds barlines between measures, measure numbers, double barline at
@@ -63,8 +67,21 @@ def write_measures(measures, measures_per_line, filename=None):
             for row in range(4):  # Measures are 4 rows tall.
                 for measure_num, measure in measure_group:
                     fh.write('|')
-                    for column in measure.columns:
-                        fh.write(column.value[row])
+                    for column_num, column in enumerate(measure.columns):
+                        if last_edit and last_edit.measure_num == measure_num and last_edit.column_num == column_num:
+                            if last_edit.type == EditDescriptor.EditType.INSERT:
+                                color = Fore.GREEN
+                            elif last_edit.type == EditDescriptor.EditType.UPDATE:
+                                color = Fore.YELLOW
+                            elif last_edit.type == EditDescriptor.EditType.DELETE:
+                                color = Fore.RED
+                            else:
+                                raise ValueError("Unknown edit type")
+                        else:
+                            color = ''
+                        fh.write(color + column.value[row])
+                        if color:
+                            fh.write(Style.RESET_ALL)
                 if measure_num == len(measures)-1:
                     fh.write('||')
                 elif (measure_num + 1) % measures_per_line == 0:

@@ -34,6 +34,7 @@ class Column():
     def update(self, column_str):
         self.value = self.normalize(column_str)
 
+
 class Measure():
     def __init__(self, column_list=None):
         if column_list:
@@ -65,4 +66,16 @@ class Measure():
             self.columns.pop(-1)
         else:
             raise ValueError("Column index out of range.")
+
+
+class EditDescriptor():
+    class EditType:
+        INSERT = 0
+        UPDATE = 1
+        DELETE = 2
+
+    def __init__(self, edit_type, measure_num, column_num):
+        self.type = edit_type
+        self.measure_num = measure_num
+        self.column_num = column_num
 
