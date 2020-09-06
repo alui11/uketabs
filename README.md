@@ -173,6 +173,11 @@ replace the specified column with a new one
 ##### `del [measure #] [column #]`
 delete the specified column
 
+## What do the colors mean?
+The program will always emphasize the last-made edit using colos.
+Green indicates an addition, yellow an update to a column, and red a
+deletion (between the two red columns).
+
 ## Todo
 - Undo command (Edit history)
 - Load file with command line argument
