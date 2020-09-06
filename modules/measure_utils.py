@@ -60,34 +60,65 @@ def write_measures(measures, measures_per_line, filename=None, last_edit=None):
         measures_per_line: prints this many measures per line of music.
         filename: File to write to. Prints to sys.stdout if None.
     '''
+    if filename is not None:
+        last_edit = None
+
+    def falls_within_last_edit(measure_num, col_num):
+        if not last_edit:
+            return False
+        if measure_num < last_edit.measure_range[0]:
+            return False
+        if measure_num >= last_edit.measure_range[1]:
+            return False
+        if not last_edit.column_ranges:
+            return True
+        m = measure_num - last_edit.measure_range[0]
+        if col_num < last_edit.column_ranges[m][0]:
+            return False
+        if col_num >= last_edit.column_ranges[m][1]:
+            return False
+        return True
+
+    def get_color(measure_num, column_num):
+        if not last_edit:
+            return ''
+        if falls_within_last_edit(measure_num, column_num):
+            if last_edit.type == EditDescriptor.EditType.INSERT:
+                return Fore.GREEN
+            elif last_edit.type == EditDescriptor.EditType.UPDATE:
+                return Fore.YELLOW
+            elif last_edit.type == EditDescriptor.EditType.DELETE:
+                return Fore.RED
+            else:
+                raise ValueError("Unknown edit type")
+        else:
+            return Fore.WHITE
+
     with smart_open(filename) as fh: 
         for measure_group in chunker(measures, measures_per_line):
             fh.write(str(measure_group[0][0]+1))  # Write measure number.
             fh.write('\n')
             for row in range(4):  # Measures are 4 rows tall.
                 for measure_num, measure in measure_group:
-                    fh.write('|')
+                    color = get_color(measure_num, 0)
+                    if last_edit and measure_num == last_edit.measure_range[0] and not last_edit.first_barline:
+                        color = Fore.WHITE
+                    if last_edit and measure_num == last_edit.measure_range[1] and last_edit.last_barline:
+                        color = get_color(measure_num - 1, len(measures[measure_num - 1].columns) - 1)
+                    fh.write(color + '|')
                     for column_num, column in enumerate(measure.columns):
-                        if last_edit and last_edit.measure_num == measure_num and last_edit.column_num == column_num:
-                            if last_edit.type == EditDescriptor.EditType.INSERT:
-                                color = Fore.GREEN
-                            elif last_edit.type == EditDescriptor.EditType.UPDATE:
-                                color = Fore.YELLOW
-                            elif last_edit.type == EditDescriptor.EditType.DELETE:
-                                color = Fore.RED
-                            else:
-                                raise ValueError("Unknown edit type")
-                        else:
-                            color = ''
+                        color = get_color(measure_num, column_num)
                         fh.write(color + column.value[row])
-                        if color:
-                            fh.write(Style.RESET_ALL)
+                if last_edit and measure_num == last_edit.measure_range[1] - 1 and not last_edit.last_barline:
+                    color = Fore.WHITE
                 if measure_num == len(measures)-1:
-                    fh.write('||')
+                    fh.write(color + '||')
                 elif (measure_num + 1) % measures_per_line == 0:
-                    fh.write('|')
+                    fh.write(color + '|')
                 fh.write('\n')
             fh.write('\n')
+        if last_edit:
+            fh.write(Style.RESET_ALL)
 
 def load_tab_from_ascii_lines(lines):
     '''Loads tab from a list of ascii lines into a list of Measure

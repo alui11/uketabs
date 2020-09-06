@@ -74,8 +74,30 @@ class EditDescriptor():
         UPDATE = 1
         DELETE = 2
 
-    def __init__(self, edit_type, measure_num, column_num):
+    def __init__(self, edit_type, measure_range, column_ranges, first_barline=False, last_barline=False):
+        '''Ranges are [begin, end). measure_range may be an int to specify only one measure.
+        column_ranges may be None to specify all columns.'''
         self.type = edit_type
-        self.measure_num = measure_num
-        self.column_num = column_num
+        if isinstance(measure_range, int):
+            self.measure_range = (measure_range, measure_range + 1)
+        else:
+            assert isinstance(measure_range, tuple)
+            if len(measure_range) != 2:
+                raise ValueError("Measure range must be a tuple of 2 elements.")
+            if measure_range[0] < 0 or not measure_range[0] < measure_range[1]:
+                raise ValueError("Invalid measure range.")
+            self.measure_range = measure_range
+        if column_ranges:
+            assert isinstance(column_ranges, list)
+            if len(column_ranges) != self.measure_range[1] - self.measure_range[0]:
+                raise ValueError("There must be exactly one column range for each measure.")
+            for column_range in column_ranges:
+                assert isinstance(column_range, tuple)
+                if len(column_range) != 2:
+                    raise ValueError("Each column range must be a tuple of 2 elements.")
+                if column_range[0] < 0 or not column_range[0] < column_range[1]:
+                    raise ValueError("Invalid column range.")
+        self.column_ranges = column_ranges
+        self.first_barline = first_barline
+        self.last_barline = last_barline
 

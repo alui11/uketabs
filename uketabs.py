@@ -93,7 +93,7 @@ def main():
     clipboard = []
 
     # Last edit
-    last_edit = EditDescriptor(EditType.INSERT, 0, 0)
+    last_edit = EditDescriptor(EditType.INSERT, 0, None, True, True)
 
     measure_utils.write_measures(measures, mpl, last_edit=last_edit)
     while True:
@@ -124,6 +124,7 @@ def main():
                     raise ValueError("load requires filename argument.")
                 filename = command[1]
                 measures = measure_utils.load_tab_from_ascii(filename)
+                last_edit = None
                 measure_utils.write_measures(measures, mpl, last_edit=last_edit)
                 auto_save = filename
             except Exception as e:
@@ -142,11 +143,11 @@ def main():
                 print("Error saving file: {}".format(e.message))
         elif command == "new":
             measures = [Measure()]
-            last_edit = EditDescriptor(EditType.INSERT, 0, 0)
+            last_edit = EditDescriptor(EditType.INSERT, 0, None, True, True)
             measure_utils.write_measures(measures, mpl, last_edit=last_edit)
         elif command in ["bar", "b"]:
             measures.append(Measure())
-            last_edit = EditDescriptor(EditType.INSERT, len(measures) - 1, 0)
+            last_edit = EditDescriptor(EditType.INSERT, len(measures) - 1, None, True, False)
             measure_utils.write_measures(measures, mpl, last_edit=last_edit)
         elif command.startswith("barline"):
             command = command.split()
@@ -159,8 +160,9 @@ def main():
                 col_num = int(command[2])-1
                 split = measure_utils.split_measure(measures[measure_num], col_num)
                 measures[measure_num] = split[0]
+                split[1].insert(0, '')
                 measures.insert(measure_num+1, split[1])
-                last_edit = EditDescriptor(EditType.INSERT, measure_num + 1, 0)
+                last_edit = EditDescriptor(EditType.INSERT, measure_num + 1, [(0, 1)], True, False)
                 measure_utils.write_measures(measures, mpl, last_edit=last_edit)
             except Exception as e:
                 print("Error inserting barline: {}".format(e.message))
@@ -175,10 +177,11 @@ def main():
                 elif measure_num < 0 or measure_num > len(measures) - 1:
                     raise ValueError("Measure number out of range.")
                 col_num = len(measures[measure_num - 1].columns) - 1
+                deletes_last_col = len(measures[measure_num].columns) == 1
                 merged = measure_utils.merge_measures(measures[measure_num - 1], measures[measure_num])
                 measures[measure_num - 1] = merged
                 measures.pop(measure_num)
-                last_edit = EditDescriptor(EditType.DELETE, measure_num - 1, col_num)
+                last_edit = EditDescriptor(EditType.DELETE, measure_num - 1, [(col_num, col_num + 2)], False, deletes_last_col)
                 measure_utils.write_measures(measures, mpl, last_edit=last_edit)
             except Exception as e:
                 print("Error deleting barline: {}".format(e.message))
@@ -190,7 +193,8 @@ def main():
                     measures[-1].delete()
                     if autospace and len(measures[-1].columns) > 1:
                         measures[-1].delete()
-                last_edit = EditDescriptor(EditType.DELETE, len(measures) - 1, len(measures[-1].columns) - 1)
+                cols = len(measures[-1].columns)
+                last_edit = EditDescriptor(EditType.DELETE, len(measures) - 1, [(cols - 1, cols)], False, True)
                 measure_utils.write_measures(measures, mpl, last_edit=last_edit)
             except Exception as e:
                 print("Error removing last entry: {}".format(e.message))
@@ -203,7 +207,7 @@ def main():
                 if measure_num < 0 or measure_num > len(measures) - 1:
                     raise ValueError("Measure number out of range.")
                 measures.insert(measure_num, Measure())
-                last_edit = EditDescriptor(EditType.INSERT, measure_num, 0)
+                last_edit = EditDescriptor(EditType.INSERT, measure_num, None, True, False)
                 measure_utils.write_measures(measures, mpl, last_edit=last_edit)
             except Exception as e:
                 print("Error inserting measure: {}".format(e.message))
@@ -218,7 +222,8 @@ def main():
                 if len(measures) == 1:
                     raise ValueError("Cannot delete the only measure.")
                 measures.pop(measure_num)
-                last_edit = EditDescriptor(EditType.DELETE, measure_num - 1, len(measures[measure_num-1].columns) - 1)
+                cols = len(measures[measure_num-1].columns)
+                last_edit = EditDescriptor(EditType.DELETE, measure_num - 1, [(cols - 1, cols)], False, True)
                 measure_utils.write_measures(measures, mpl, last_edit=last_edit)
             except Exception as e:
                 print("Error deleting measure: {}".format(e.message))
@@ -261,8 +266,8 @@ def main():
                     if measure_num < 0 or measure_num > len(measures) - 1:
                         raise ValueError("Measure number out of range.")
                     measures[measure_num:measure_num] = copy.deepcopy(clipboard)
-                    # TODO: Allow edit ranges.
-                    last_edit = None
+                    m_range = (measure_num, measure_num + len(clipboard))
+                    last_edit = EditDescriptor(EditType.INSERT, m_range, None, True, False)
                     measure_utils.write_measures(measures, mpl, last_edit=last_edit)
                 else:
                     print("Clipboard empty")
@@ -272,8 +277,8 @@ def main():
             try:
                 if len(clipboard) > 0:
                     measures.extend(copy.deepcopy(clipboard))
-                    # TODO: Allow edit ranges.
-                    last_edit = None
+                    m_range = (len(measures) - len(clipboard), len(measures))
+                    last_edit = EditDescriptor(EditType.INSERT, m_range, None, True, False)
                     measure_utils.write_measures(measures, mpl, last_edit=last_edit)
                 else:
                     print("Clipboard empty")
@@ -290,7 +295,7 @@ def main():
                 col_num = int(command[2])-1
                 col = ' '.join(command[3:])
                 measures[measure_num].update(col_num, col)
-                last_edit = EditDescriptor(EditType.UPDATE, measure_num, col_num)
+                last_edit = EditDescriptor(EditType.UPDATE, measure_num, [(col_num, col_num+1)])
                 measure_utils.write_measures(measures, mpl, last_edit=last_edit)
             except Exception as e:
                 print("Error editing column: {}".format(e.message))
@@ -305,7 +310,7 @@ def main():
                 col_num = int(command[2])-1
                 col = ' '.join(command[3:])
                 measures[measure_num].insert(col_num, col)
-                last_edit = EditDescriptor(EditType.INSERT, measure_num, col_num)
+                last_edit = EditDescriptor(EditType.INSERT, measure_num, [(col_num, col_num+1)])
                 measure_utils.write_measures(measures, mpl, last_edit=last_edit)
             except Exception as e:
                 print("Error inserting column: {}".format(e.message))
@@ -318,20 +323,24 @@ def main():
                 if measure_num < 0 or measure_num > len(measures) - 1:
                     raise ValueError("Measure number out of range")
                 col_num = int(command[2])-1
+                is_last_col = col_num == len(measures[measure_num].columns) - 1
+                is_first_col = col_num == 0
                 measures[measure_num].delete(col_num)
-                last_edit = EditDescriptor(EditType.DELETE, measure_num, col_num - 1)
+                last_edit = EditDescriptor(EditType.DELETE, measure_num, [(col_num-1, col_num+1)], is_first_col, is_last_col)
                 measure_utils.write_measures(measures, mpl, last_edit=last_edit)
             except Exception as e:
                 print("Error deleting column: {}".format(e.message))
         else:
-            try:
-                measures[-1].append(command)
-                last_edit = EditDescriptor(EditType.INSERT, len(measures) - 1, len(measures[-1].columns) - 1)
-                if autospace and command != '' and set(command.split()) != set(['-']):
-                    measures[-1].append('')
-                measure_utils.write_measures(measures, mpl, last_edit=last_edit)
-            except Exception as e:
-                print("Error adding column: {}".format(e.message))
+            #try:
+            measures[-1].append(command)
+            cols = len(measures[-1].columns)
+            last_edit = EditDescriptor(EditType.INSERT, len(measures) - 1, [(cols-1, cols)])
+            if autospace and command != '' and set(command.split()) != set(['-']):
+                measures[-1].append('')
+                last_edit = EditDescriptor(EditType.INSERT, len(measures) - 1, [(cols-1, cols+1)])
+            measure_utils.write_measures(measures, mpl, last_edit=last_edit)
+            #except Exception as e:
+            #    print("Error adding column: {}".format(e.message))
 
 if __name__ == '__main__':
     main()

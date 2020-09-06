@@ -186,3 +186,4 @@ delete the specified column
 - Repeats
 - Stop the user from leaving without saving
 - Look up specific command
+- Autospace should change behavior for insert/del barline
