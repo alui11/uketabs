@@ -174,7 +174,7 @@ replace the specified column with a new one
 delete the specified column
 
 ## What do the colors mean?
-The program will always emphasize the last-made edit using colos.
+The program will always emphasize the last-made edit using colors.
 Green indicates an addition, yellow an update to a column, and red a
 deletion (between the two red columns).
 
@@ -185,8 +185,6 @@ deletion (between the two red columns).
 - Cursor
   - Move to specific spot, beginning, end, left, right, up, down
 - More bar numbers when mpl is large
-- Highlight last change
-  - Different colors for change/insertion/deletion
 - Display columns per line instead of measure per line
 - Repeats
 - Stop the user from leaving without saving
